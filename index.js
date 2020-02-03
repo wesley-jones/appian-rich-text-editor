@@ -323,6 +323,10 @@ function debounce(func, delay) {
   };
 }
 
+/**
+ * Enable copy/paste from clipboard for non-html images.
+ * Reference: https://github.com/quilljs/quill/issues/137
+ */
 var IMAGE_MIME_REGEX = /^image\/(p?jpeg|gif|png)$/i;
 var loadImage = function (file) {
     var reader = new FileReader();
