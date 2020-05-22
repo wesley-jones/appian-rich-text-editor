@@ -364,7 +364,6 @@ function saveToServer(file=File) {
 
   const xhr = new XMLHttpRequest();
   xhr.open('POST', 'https://srademo.appiancloud.com/suite/webapi/upload-image', true);
-  xhr.setRequestHeader("Origin", 'srademo.appiancloud.com');
   xhr.onload = () => {
     if (xhr.status === 200) {
       // this is callback data: url
