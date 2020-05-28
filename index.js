@@ -186,8 +186,8 @@ function test() {
       fd.append('image', file);
 
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://wes.nav-labs.com:8080/suite/webapi/upload', true);
-      xhr.setRequestHeader("Authorization", "Basic " + btoa("admin.user:test"));
+      xhr.open('POST', 'https://navlabsdev.appiancloud.com/suite/webapi/upload', true);
+      xhr.setRequestHeader("Authorization", "Basic " + btoa("wes.jones:testtest"));
       xhr.setRequestHeader("Appian-Document-Name", "wells.png");
       xhr.onload = () => {
         if (xhr.status === 200) {
@@ -209,7 +209,7 @@ function test() {
     function insertToEditor(url=string) {
       // push image url to rich editor.
       const range = quill.getSelection();
-      quill.insertEmbed(range.index, 'image', `http://wes.nav-labs.com:8080/suite/doc/${url}`);
+      quill.insertEmbed(range.index, 'image', `https://navlabsdev.appiancloud.com/suite/doc/${url}`);
     }
 
     // quill editor add image handler
