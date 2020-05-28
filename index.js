@@ -154,6 +154,64 @@ function test() {
       }
     });
 
+    /**
+     * Step1. select local image
+     *
+     */
+    function selectLocalImage() {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.click();
+
+      // Listen upload local image and save to server
+      input.onchange = () => {
+        const file = input.files[0];
+
+        // file type is only image.
+        if (/^image\//.test(file.type)) {
+          saveToServer(file);
+        } else {
+          console.warn('You could only upload images.');
+        }
+      };
+    }
+
+    /**
+     * Step2. save to server
+     *
+     * @param {File} file
+     */
+    function saveToServer(file=File) {
+      const fd = new FormData();
+      fd.append('image', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'http://wes.nav-labs.com:8080/suite/webapi/upload', true);
+      xhr.setRequestHeader("Authorization", "Basic " + btoa("admin.user:test"));
+      xhr.setRequestHeader("Appian-Document-Name", "wells.png");
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          // this is callback data: url
+          // const url = JSON.parse(xhr.responseText).data;
+          const url = xhr.responseText;
+          console.log(url);
+          insertToEditor(url);
+        }
+      };
+      xhr.send(file);
+    }
+
+    /**
+     * Step3. insert image url to rich editor.
+     *
+     * @param {string} url
+     */
+    function insertToEditor(url=string) {
+      // push image url to rich editor.
+      const range = quill.getSelection();
+      quill.insertEmbed(range.index, 'image', `http://wes.nav-labs.com:8080/suite/doc/${url}`);
+    }
+
     // quill editor add image handler
     quill.getModule('toolbar').addHandler('image', () => {
       selectLocalImage();
@@ -329,66 +387,6 @@ function debounce(func, delay) {
     }, delay);
   };
 }
-
-
-/**
- * Step1. select local image
- *
- */
-function selectLocalImage() {
-  const input = document.createElement('input');
-  input.setAttribute('type', 'file');
-  input.click();
-
-  // Listen upload local image and save to server
-  input.onchange = () => {
-    const file = input.files[0];
-
-    // file type is only image.
-    if (/^image\//.test(file.type)) {
-      saveToServer(file);
-    } else {
-      console.warn('You could only upload images.');
-    }
-  };
-}
-
-/**
- * Step2. save to server
- *
- * @param {File} file
- */
-function saveToServer(file=File) {
-  const fd = new FormData();
-  fd.append('image', file);
-
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'https://srademo.appiancloud.com/suite/webapi/upload-image', true);
-  xhr.onload = () => {
-    if (xhr.status === 200) {
-      // this is callback data: url
-      const url = JSON.parse(xhr.responseText).data;
-      insertToEditor(url);
-    }
-  };
-  xhr.send(fd);
-}
-
-/**
- * Step3. insert image url to rich editor.
- *
- * @param {string} url
- */
-function insertToEditor(url=string) {
-  // push image url to rich editor.
-  const range = editor.getSelection();
-  editor.insertEmbed(range.index, 'image', `https://srademo.appiancloud.com/docs/${url}`);
-}
-
-
-
-
-
 
 /**
  * Enable copy/paste from clipboard for non-html images.
